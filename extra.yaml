@@ -1,0 +1,253 @@
+openapi: 3.0.3
+info:
+  title: Starship Service
+  description: Лабораторная работа №1. Разработать спецификацию в формате OpenAPI для набора веб-сервисов
+  version: 1.0.0
+paths:
+  /starship/create/{id}/{name}:
+    post:
+      summary: Add new ship
+      description: Add new ship
+      operationId: createShip
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Ship id
+          schema:
+            type: integer
+            format: int64
+            nullable: false
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+        - name: name
+          in: path
+          required: true
+          description: Ship name
+          schema:
+            type: string
+            nullable: false
+            example: USA
+      tags:
+        - API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StarshipCreate'
+      responses:
+        '200':
+          description: Ship was successfully added
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 400,
+                      "message": "Validation failed",
+                      "time": "2022-09-19T00:00:09Z"
+                    }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 500,
+                      "message": "Internal server error",
+                      "time": "2022-09-19T00:00:09Z"
+                    }
+  /starship/{id}/unload-all:
+    post:
+      summary: Unload all marines from ship
+      description: Unload all marines from ship
+      operationId: unloadAll
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Ship id to find
+          schema:
+            type: integer
+            format: int64
+            nullable: false
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+      tags:
+        - API
+      responses:
+        '200':
+          description: Marines were successfully unload
+        '400':
+          description: Invalid id value
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 200,
+                      "message": "Invalid id value",
+                      "time": "2022-09-19T00:00:09Z"
+                    }
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 404,
+                      "message": "Not found",
+                      "time": "2022-09-19T00:00:09Z"
+                    }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 500,
+                      "message": "Internal server error",
+                      "time": "2022-09-19T00:00:09Z"
+                    }
+  /starship/{starship-id}/load/{spacemarine-id}:
+    put:
+      summary: Load marine to ship
+      description: Load marine to ship
+      operationId: loadSpaceMarine
+      parameters:
+        - name: starship-id
+          in: path
+          required: true
+          description: Ship id to find
+          schema:
+            type: integer
+            format: int64
+            nullable: false
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+        - name: spacemarine-id
+          in: path
+          required: true
+          description: Ship id to find
+          schema:
+            type: integer
+            format: int64
+            nullable: false
+            minimum: 0
+            exclusiveMinimum: true
+            example: 1
+      tags:
+        - API
+      responses:
+        '200':
+          description: Marine were successfully load
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 200,
+                      "message": "Invalid id value",
+                      "time": "2022-09-19T00:00:09Z"
+                    }
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 404,
+                      "message": "Not found",
+                      "time": "2022-09-19T00:00:09Z"
+                    }
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                response:
+                  value: |-
+                    {
+                      "code": 500,
+                      "message": "Internal server error",
+                      "time": "2022-09-19T00:00:09Z"
+                    }
+components:
+  schemas:
+    Coordinates:
+      type: object
+      properties:
+        x:
+          type: integer
+          format: int64
+        y:
+          type: number
+          format: double
+          maximum: 4
+    StarshipCreate:
+      type: object
+      properties:
+        coordinates:
+          $ref: "#/components/schemas/Coordinates"
+        crewCount:
+          type: integer
+          format: int32
+          nullable: false
+          minimum: 0
+        health:
+          type: integer
+          format: int32
+          nullable: false
+          minimum: 0
+          maximum: 100
+    Error:
+      required:
+        - code
+        - message
+        - time
+      properties:
+        code:
+          nullable: false
+          type: integer
+        message:
+          nullable: false
+          type: string
+        time:
+          type: string
+          format: date-time
+          example: 2022-09-19T00:00:09Z
