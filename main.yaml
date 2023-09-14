@@ -12,23 +12,19 @@ paths:
       parameters:
         - name: sort
           in: query
-          description: Array of fields that are used for sorting.
+          description: Field for sorting.
           required: false
-          explode: true
           schema:
-            type: array
-            items:
-              type: string
-              default: id
-              enum:
-                - id
-                - name
-                - creationDate
-                - health
-                - heartCount
-                - achievements
-                - category
-                - starshipId
+            type: string
+            enum:
+              - id
+              - name
+              - creationDate
+              - health
+              - heartCount
+              - achievements
+              - category
+              - starshipId
         - name: sortType
           in: query
           required: false
@@ -373,6 +369,13 @@ paths:
       summary: Return the number of marines whose achievements field value is less than the specified one
       description: Return the number of marines whose achievements field value is less than the specified one
       operationId: getLowerAchievs
+      parameters:
+        - name: achieve
+          in: query
+          description: Achieve name.
+          required: true
+          schema:
+            type: string
       tags:
         - Дополнительный набор
       responses:
